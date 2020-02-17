@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>jQuery</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <style>
+        #event-content {
+            border: 3px solid black;
+            height: 60px;
+            margin-bottom: 10px;
+            color: yellow;
+            background: gray;
+
+        }
+
+        #calc-content {
+            border: 3px solid black;
+            height: 60px;
+            margin-bottom: 10px;
+            color: yellow;
+            background: gray;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content"></div>
+
+    <button onclick="runOrign()">Orign</button>
+    <button onclick="runjQ()">jQ</button>
+
+    <hr>
+
+    <h4>事件綁定</h4>
+    <div id="event-content"></div>
+    <button id="event-plus-btn">Plus</button>
+    <button id='event-minus-btn'>Minus</button>
+    <button id="event-reset-btn">Reset</button>
+
+    <hr>
+    <div id="calc-content"></div>
+    <select id="op">
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">*</option>
+        <option value="/">/</option>
+    </select>
+    <input type="number" id="n1">
+    <button id="calc-btn">Calc</button>
+</body>
+
+<script>
+    const runOrign = () => {
+        let content = document.querySelector('#content');
+        content.innerHTML = 'From Orign';
+        content.style.color = 'red';
+        content.style.background = 'black';
+    }
+    const runjQ = () => {
+        $('#content').html('From jQuery')
+            .css('color', 'blue') // 取值用.
+            .css('background', 'yellow'); //沒有加分號不會跳錯誤，建議結尾加分號!
+    }
+    let count = 0;
+    let eventPlusBtn = $('#event-plus-btn'); //抓取DOM
+    eventPlusBtn.on('click', (e) => {
+        count++
+        $('#event-content').html('Click Me Count: ' + count);
+    });
+    $('#event-minus-btn').on('click', (e) => { //e為事件 ，.on為觸發
+        count--
+        if (count <= 0) {
+            count = 0;
+        }
+        $('#event-content').html('Click Me Count: ' + count);
+    });
+    $('#event-reset-btn').on('click', (e) => { //簡化，可以不用給變數再呼叫
+        count = 0
+        $('#event-content').html('Click Me Count: ' + count);
+    });
+
+    let total = 0;
+    $('#calc-content').html(total);
+
+    $('#calc-btn').on('click', () => {
+        let n1 = +$('#n1').val(); //+為強制轉型(int)
+        let op = $('#op').val();
+        let prev = total;
+        if (op == '+') {
+            total += n1;
+        }
+        if (op == '-') {
+            total -= n1;
+        }
+        if (op == '*') {
+            total *= n1;
+        }
+        if (op == '/') {
+            if(n1 != 0) {
+                 total /= n1;
+            }
+        }
+        $('#calc-content').html(prev + '' + op + '' + n1 + '=' + total);
+    });
+</script>
+
+</html>

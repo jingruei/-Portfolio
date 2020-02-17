@@ -1,0 +1,57 @@
+.block{
+    height: 50px;
+    line-height: 50px;
+    margin: 10px 0;
+}
+
+#w1{
+    width: 20%;
+    background: black;
+    color:#ffffff;
+    transition-duration: 4s;
+}
+
+#w1:hover{
+    width: 100%;
+    background: red;
+    /*transition-duration: 4s;*/
+}
+
+#w2{
+    width: 20%;
+    background: black;
+    color: #ffffff;
+}
+
+#w2:hover{
+    width: 100%;
+    background: red;
+    transition-duration: 4s;
+}
+
+#w3{
+    width: 20%;
+    background: black;
+    color: #ffffff;
+    transition-duration: 4s;
+    transition-property: width;
+}
+
+#w3:hover{
+    width: 100%;
+    background: red;
+    color: #fff;
+}
+
+#w4{
+    width: 20%;
+    background: black;
+    color: #ffffff;
+    transition-duration: 4s;
+}
+
+#w4:hover{
+    width: 100%;
+    background: red;
+   transition-delay: 2s;
+}

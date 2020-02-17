@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>計算機小工具</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+
+    <style>
+        #result-block {
+            background: #0080c0;
+            color: #ffff;
+            height: 100px;
+            font-size: 3rem;
+            display: flex;
+            /*要先浮起來才可以移動垂直水平方向*/
+            justify-content: flex-end;
+            /*垂直線*/
+            align-items: center;
+            /*水平線*/
+            border: 1px solid #fff;
+        }
+        #resulit {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+        #operator {
+            width: 50px;
+            text-align: center;
+        }
+        #number-button>div {
+            /* 父系統> 子系統*/
+            background: #009d9d;
+            color: #ffff;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #fff;
+            /*邊線*/
+            cursor: pointer;
+            /*游標*/
+        }
+
+        #number-button>div:hover {
+            background: red;
+            transition: .5s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12" id="result-block">
+                <div id="result">0</div>
+                <div id="operator"></div>
+            </div>
+        </div>
+        <div class="row" id="number-button">
+            <div class="col-3">C</div>
+            <div class="col-3">+/-</div>
+            <div class="col-3">%</div>
+            <div class="col-3">/</div>
+            <div class="col-3">7</div>
+            <div class="col-3">8</div>
+            <div class="col-3">9</div>
+            <div class="col-3">x</div>
+            <div class="col-3">4</div>
+            <div class="col-3">5</div>
+            <div class="col-3">6</div>
+            <div class="col-3">-</div>
+            <div class="col-3">1</div>
+            <div class="col-3">2</div>
+            <div class="col-3">3</div>
+            <div class="col-3">+</div>
+            <div class="col-6">0</div>
+            <div class="col-3">.</div>
+            <div class="col-3">=</div>
+        </div>
+
+    </div>
+</body>
+
+<script>
+    const calc = {
+        operator: '',
+        operators: ['+', '-', 'x', '/', '%'], //陣列0~4
+        num: 0,
+        preNum: '',
+        init() {
+            this.bindButton();
+        },
+        bindButton() {
+            $('#number-button').on('click', (e) => {
+                let target = e.target;
+                let value = $(target).html();
+                this.isOperator(value);
+                this.isNumber(value);
+            });
+        },
+        isNumber(value) {
+            if (!/^\d$/.test(value) && value != '.') {
+                return false; //    //為標準正規式，^開頭 $結尾 \d數字(整句話為第一個數如果不等於數字)
+            }
+            if (value == '.' && /\./.test(this.num)) {
+                return false; //  \跳脫字元  .可以為任何數   \.為小數點
+            }
+            this.num += value;
+            this.num = this.num.replace(/^0+/, '') || 0; //如果第一個數為0使用空字串取代
+            if (/^\./.test(this.num)) { // 如果第一個數為小數點，前面加上0
+                this.num = '0' + this.num;
+            }
+            this.display(this.num);
+        },
+        isOperator(value) {
+            if (this.operators.indexOf(value) >= 0) { //indexOf為陣列的method，從0開始
+                this.operator = value;
+                if (!this.preNum) {
+                    this.preNum = this.num;
+                }
+                this.num = 0;
+                $('#operator').html(this.operator);
+
+            }
+            if (value == 'C') { //清除
+                this.num = 0;
+                this.preNum = '';
+                this.operator = '';
+
+                this.display(0);
+            }
+            if (value == '+/-') { //正負數
+                let num = this.preNum || this.num;
+                num *= -1;
+                this.display(num);
+                this.num = num; //循環
+
+            }
+            if (value == '=') { //等於
+                this.calc();
+            }
+        },
+        calc() {
+            if (!this.operator) {
+                return false;
+            }
+
+            let total = 0;
+            let a = parseFloat(this.preNum); // 前一個數轉浮點數
+            let b = parseFloat(this.num);
+
+            switch (this.operator) {
+                case '+':
+                    total = a + b;
+                    break;
+                case '-':
+                    total = a - b;
+                    break;
+                case 'x':
+                    total = a * b;
+                    break;
+                case '/':
+                    total = a / b;
+                    break;
+                case '%':
+                    total = a % b;
+                    break;
+            }
+            total = Math.round(total * 100) / 100;   //小數兩位  round四捨五入
+            this.display(total);
+            this.preNum = total;
+        },
+        display(value) {
+            $('#result').html(value);
+        }
+    }
+    calc.init();
+</script>
+
+</html>

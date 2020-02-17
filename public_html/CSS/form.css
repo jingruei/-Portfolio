@@ -1,0 +1,74 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background: gray;
+    background: url(bg.jpg);
+    background-position:center;
+    background-repeat:no-repeat;
+
+}
+
+.jion-form{
+    width: 600px;
+    min-height: 200px;
+    background: wheat;
+    padding: 10px;
+    border: 2px solid blue;
+    border-radius: 6px;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.title{
+    font-size: 20px;
+    height: 30px;
+}
+
+.form{
+    margin-top: 10px;
+}
+
+.item{
+    margin: 10px auto;
+}
+
+.item .control-label{
+    display: block;
+    height: 30px;
+    color:rgb(0, 162, 255);
+}
+
+.form-control{
+    width: 100%;
+    height: 30px;
+}
+
+input[type=checkbox]:checked+label,
+input[type=radio]:checked+label{
+    color: red;
+}
+
+input::placeholder{
+    text-indent: 5px;
+}
+
+.send-btn{
+    text-align: right;
+}
+
+.send-btn input[type=submit]{
+    background: rgb(0, 153, 255);
+    color: white;
+    padding: 10px 30px;
+    border: 0;
+    cursor: pointer;
+}
+
+.send-btn input[type=submit]:hover{
+    background: red;
+    color: white;
+    transition: 1s;
+}

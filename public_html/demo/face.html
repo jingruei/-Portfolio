@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Face</title>
+
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            background: yellowgreen;
+        }
+
+        #face{
+            margin: 200px;
+            border: 10px;
+            width: 200px;
+            height: 200px;
+            position: relative;
+            background: blue;
+        }
+
+        #eye-left{
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50px;
+            background: black;
+            top: 20px;
+            left: 20px;
+        }
+
+        #eye-right{
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50px;
+            background: black;
+            top: 20px;
+            right: 20px;
+        }
+
+        .eye-block{
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 30px;
+            background: blanchedalmond;
+            top: 10px;
+            left: 10px;
+        }
+
+        #mouth{
+            position:absolute;
+            width: 100px;
+            height: 50px;
+            background: black;
+            bottom: 30px;
+            left: 50px;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="face">
+        <div id="eye-left">
+            <div class="eye-block"></div>
+        </div>
+
+        <div id="eye-right">
+            <div class="eye-block"></div>
+        </div>
+
+        <div id="mouth"></div>
+    </div>
+</body>
+</html>

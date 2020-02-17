@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Json test</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="alert alert-info">jQuery</div>
+    </div>
+    <div class="container">
+        <div class="form-group">
+            <button class="btn btn-info" id="b1">1</button>
+            <button class="btn btn-info" id="b2">2</button>
+            <button class="btn btn-info" id="b3">3</button>
+            <a href="generated.json">JSON</a>
+        </div>
+        <form action="file.php" method="POST">
+            <div class="form-group">
+                <input type="file" id="ufile">
+                <button type="submit" id="upload">Submit</button>
+            </div>
+        </form>
+
+</body>
+<script>
+    let b1 = $('#b1');
+    b1.on('click', (e) => {
+        console.log(1234);
+    });
+
+    let b2 = $('#b2');
+    b2.on('click', () => {
+        $.get('generated.json', (rep) => {
+            console.log(rep);
+            console.log(rep[0].name);
+        });
+    });
+    $('#b3').on('click', () => {
+        $.get('gg', (rep) => {
+            console.log(rep);
+            let data = JSON.parse(rep);
+            console.log(data);
+            console.log(rep[0].name);
+        });
+    });
+
+
+    let file = '';
+    $('#ufile').on('change', (e) => {
+        file = '';
+        if (e.target.files[0]) {
+            file = e.target.files[0];
+        }
+        console.log(file);
+    });
+
+    $('#upload').on('click', () => {
+        if (!file) {      //確認有沒有附加檔案
+            return false;
+        }
+
+        let form = new FormData();
+        form.append('ufile', file) //key,value
+
+        let options = { //物件
+            url: 'file.php',    //目的端
+            type: 'post',       //方法
+            cache: false,  //快取
+            contentType: false,  //文字檔
+            processData: false,   //字串
+            data: form
+        };
+
+        $.ajax(options)  //ajax後面括號內是物件
+            .done(rep => {   //當完成後再回傳
+                console.log(rep);
+            });
+    });
+</script>
+
+</html>

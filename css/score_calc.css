@@ -1,0 +1,15 @@
+#err-msg {
+    display: none;
+}
+
+#err-msg.active {
+    display: block;
+}
+
+#result {
+    display: none;
+}
+
+#result.active {
+    display: block;
+}

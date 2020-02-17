@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Carousel</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+
+    <style>
+        #slider {
+            height: 400px;
+            width: 100%;
+            overflow: hidden;
+            background: #dedede;
+        }
+
+        #slider-index a {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .item {
+            background: #dedede;
+            height: inherit;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            left: 100%;
+            display: none;
+            animation: slide-in 1s;
+        }
+
+        .item.active {
+            display: flex;
+            left: 0;
+            animation: slide-in 1s;
+        }
+
+        .carousel {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: inherit;
+            top: 0;
+            z-index: 2;
+            background: rgb(91, 91, 91, .5);
+            color: #fff;
+            font-size: 2rem;
+            opacity: .5;
+        }
+
+        a.carousel {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .carousel:hover {
+            opacity: 1;
+        }
+
+        .prev {
+            left: 0;
+        }
+
+        .next {
+            right: 0;
+        }
+
+        @keyframes slide-in {
+            0% {
+                left: 100%;
+            }
+
+            100% {
+                left: 0;
+            }
+        }
+    </style>
+    
+</head>
+
+<body>
+    <div class="container mt-2">
+        <h4 class="alert alert-info">Carousel</h4>
+    </div>
+    <div class="container">
+        <div class="form-group position-relative" id="slider">
+            <a href="#" class="carousel prev" onclick="prev()">
+                <i class="fas fa-caret-left"></i>
+            </a>
+            <a href="#" class="carousel next" onclick="next()">
+                <i class="fas fa-caret-right"></i>
+            </a>
+            <div class="item active">1</div>
+            <div class="item">2</div>
+            <div class="item">3</div>
+            <div class="item">4</div>
+            <div class="item">5</div>
+        </div>
+        <div>
+            <ul class="nav d-flex justify-content-center" id="slider-index">
+                <li class="m-1">
+                    <a href="#" onclick="toIndex(0)">
+                        <i class="fas fa-circle"></i>
+                    </a>
+                </li>
+                <li class="m-1">
+                    <a href="#" onclick="toIndex(1)">
+                        <i class="fas fa-circle"></i>
+                    </a>
+                </li>
+                <li class="m-1">
+                    <a href="#" onclick="toIndex(2)">
+                        <i class="fas fa-circle"></i>
+                    </a>
+                </li>
+                <li class="m-1">
+                    <a href="#" onclick="toIndex(3)">
+                        <i class="fas fa-circle"></i>
+                    </a>
+                </li>
+                <li class="m-1">
+                    <a href="#" onclick="toIndex(4)">
+                        <i class="fas fa-circle"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+<script>
+    var items = document.querySelectorAll('.item');
+    var len = items.length;
+    var maxIndex = len - 1;
+    var index = 0;
+
+    function prev() {
+        if (index <= 0) {
+            index = maxIndex;
+        } else {
+            index--;
+        }
+        render();
+    }
+
+    function next() {
+        if (index >= maxIndex) {
+            index = 0;
+        } else {
+            index++;
+        }
+        render();
+    }
+
+    function toIndex(newIndex) {
+        index = newIndex;
+        render();
+    }
+
+    function render() {
+        items.forEach(function (item) {
+            item.classList.remove('active');
+        });
+        items[index].classList.add('active');
+    }
+</script>
+
+</html>

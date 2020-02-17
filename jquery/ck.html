@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Clock</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <style>
+        .timer div {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto 3px;   /*上下auto 左右3px*/
+            height: 100px;
+            background: #000;
+            color: #fff;
+            font-size: 3rem;
+        }
+
+        .btn-hide {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-2">
+        <div class="form-group">
+            <div class="d-flex timer">
+                <div id="h1">0</div>
+                <div id="h2">0</div>
+                <div>:</div>
+                <div id="m1">0</div>
+                <div id="m2">0</div>
+                <div>:</div>
+                <div id="s1">0</div>
+                <div id="s2">0</div>
+            </div>
+        </div>
+
+        <div class="form-group text-right">
+            <button class="btn btn-success" id="record">Record</button>
+            <button class="btn btn-primary btn-hide" id="start">Start</button>
+            <button class="btn btn-danger" id="stop"> Stop</button>
+        </div>
+
+        <h4>Record</h4>
+        <hr>
+        <div id="record-block"></div>
+    </div>
+</body>
+
+<script>
+    let nowDt = '';
+    const dt = () => {
+        let date = new Date();
+        let hh = date.getHours();
+        let mm = date.getMinutes();
+        let ss = date.getSeconds();
+
+        if (hh < 10) {
+            hh = '0' + hh;
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+
+        if (ss < 10) {
+            ss = '0' + ss;
+        }
+
+        nowDt = [hh, mm, ss];
+
+        $('#h1').html(hh.toString().substr(0, 1)); //toStiring轉字串 substr(a, b) a索引值 b長度
+        $('#h2').html(hh.toString().substr(1, 1));
+        $('#m1').html(mm.toString().substr(0, 1));
+        $('#m2').html(mm.toString().substr(1, 1));
+        $('#s1').html(ss.toString().substr(0, 1));
+        $('#s2').html(ss.toString().substr(1, 1));
+    }
+
+    let timer = '';
+    const timerStart = () => {
+        dt();
+        timerStop();
+        timer = setInterval(() => {
+            dt();
+        }, 1000);
+    }
+
+    const timerStop = () => {
+        clearInterval(timer);
+    }
+
+
+    $('#start').on('click', () => {
+        timerStart();
+        $('#start').addClass('btn-hide');
+        $('#stop').removeClass('btn-hide');
+    });
+
+    $('#stop').on('click', () => {
+        timerStop();
+        $('#stop').addClass('btn-hide');
+        $('#start').removeClass('btn-hide');
+    });
+
+    let recordIndex = 1;
+    $('#record').on('click', () => {
+        $('#record-block').append('<div>#' + recordIndex + ':' + nowDt.join(' : ') + '</div>') //.join陣列轉字串
+        recordIndex++;
+    });
+    timerStart();
+</script>
+
+</html>

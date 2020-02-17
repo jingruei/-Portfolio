@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Carousel2</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <style>
+        #main {
+            height: 400px;
+            background: #dedede;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 60px;
+            background: rgba(68, 156, 190, .5);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        #control-next-btn {
+            right: 0;
+        }
+
+        #control-prev-btn {
+            left: 0;
+        }
+
+        #nav-tabs {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+        }
+
+
+
+        #nav-tabs li {
+            display: inline-block;
+            cursor: pointer;
+            background: rgba(68, 156, 190);
+            color: #fff;
+            padding: 3px 8px;
+        }        
+        #nav-tabs li.active {
+            background: #e4552a;
+        }
+
+        #nav-items {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            z-index: 1;
+            display: flex;
+            flex-wrap: nowrap;
+            position: relative;
+            left: 0;
+        }
+        #nav-items.active{
+            transition: 2s;
+        }
+        #nav-items li {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: #fff;
+            /* position: absolute;
+            top: 0;
+            left: 100%; */
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        /* #nav-items li.active {
+            left: 0;
+            transition: 2s;
+        } */
+    </style>
+</head>
+
+<body>
+    <div class="container mt-2">
+        <div class="alert alert-info">
+            <h4>Carousel2</h4>
+        </div>
+
+
+        <div class="form-group" id="main">
+            <a href="#" class="control-btn" id="control-prev-btn">Prev</a>
+            <a href="#" class="control-btn" id="control-next-btn">Next</a>
+
+            <ul id="nav-items">
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+            </ul>
+        </div>
+
+
+
+        <div class="form-group">
+            <ul id="nav-tabs">
+                <li data-index="0" class="tab">1</li>
+                <li data-index="1" class="tab">2</li>
+                <li data-index="2" class="tab">3</li>
+                <li data-index="3" class="tab">4</li>
+                <li data-index="4" class="tab">5</li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+
+<script>
+    const Carousel = {
+        index: 0,
+        init() {
+            this.initContainerWidth();
+            this.initButtonClick();
+            this.initJumpClick();
+        },
+        initContainerWidth() {
+            let container = document.querySelector('#nav-items');
+            container.style.width = (container.childElementCount * 100) + '%';
+            console.log('initContainerWidth called'); 
+        },
+        initButtonClick() {
+            let prev = document.querySelector('#control-prev-btn');
+            let next = document.querySelector('#control-next-btn');
+
+            prev.addEventListener('click', () => {
+                this.prev();
+            });
+            next.addEventListener('click', () => {
+                this.next();
+            });
+        },
+        prev() {
+            this.index--;
+            if (this.index < 0) {
+                let container = document.querySelector('#nav-items');
+                this.index = container.childElementCount -1;
+            }
+            this.run();
+
+        },
+        next() {
+            this.index++;
+            let container = document.querySelector('#nav-items');
+            if (this.index >= container.childElementCount) {
+                this.index = 0;
+            }
+            this.run();
+            
+        },
+        initJumpClick() {
+            let jump =  document.querySelector('#nav-tabs');
+
+            jump.addEventListener('click', (e) => {
+                let li = e.target;
+                if (li.nodeName == 'LI') {
+                    let index = this.getIndex(li);
+                    if (index >= 0) {
+                        this.to(index);
+                    }
+                }
+            });
+        },
+        to(index) {
+            this.index = index;
+            this.run();
+        },
+        run() {  
+            let container = document.querySelector('#nav-items');
+            container.classList.add('active');
+            container.style.left = (this.index * 100 * -1) + '%';
+            this.setJumpIndexActive();
+            console.log(this.index);
+        },
+        setJumpIndexActive() {
+            let jump = document.querySelector('#nav-tabs');
+            let children = jump.children;
+            let len = children ? children.length : 0;
+            for (let i =0; i < len; i++) {
+                children[i].classList.remove('active');
+                if (this.index == i) {
+                    children[i].classList.add('active');
+                }
+            }
+        },
+        getIndex(li) {
+            let ul = li.parentNode;
+            let children = ul.children;
+            let len = children ? children.length : 0;
+
+            for (let i = 0; i < len; i++) {
+                if(children[i] == li) {
+                    return i;
+                }
+            }
+        }
+        
+    }
+    Carousel.init();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    let nav = {
+        max: 5,
+        index: 0,
+        next() {
+            this.index++;
+            if (this.index >= this.max) {
+                this.index = 0;
+            }
+            this.run();
+        },
+        prev() {
+            if (this.index == 0) {
+                this.index = this.max;
+            }
+            this.index--;
+            this.run();
+        },
+        to(index) {
+            this.index = index;
+            this.run();
+        },
+        run() {
+            let items = document.querySelectorAll('#nav-items li');
+            let len = items.length;
+
+            for (let i = 0; i < len; i++) {
+                let item = items[i];
+                item.classList.remove('active');
+                if (i == this.index) {
+                    item.classList.add('active');
+                }
+            }
+        },
+        getContainerId() {
+            return document.querySelector('#nav-items');
+        },
+        
+
+
+    };
+    let prevBtn = document.querySelector('#control-prev-btn');
+    let nextBtn = document.querySelector('#control-next-btn');
+
+    nextBtn.addEventListener('click', () => {
+        nav.next();
+    });
+    prevBtn.addEventListener('click', () => {
+        nav.prev();
+    });
+
+    let tabs = document.querySelector('#nav-tabs');
+    tabs.addEventListener('click', (e) => {
+        let target = e.target;
+        let nodeName = target.nodeName;
+        
+        if (nodeName == 'LI') {
+            let index = target.getAttribute('data-index');
+            nav.to(index);
+        }
+    });
+    nav.run();
+</script>
+
+</html>

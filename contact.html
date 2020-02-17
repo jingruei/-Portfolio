@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Form</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        *{
+            background: #26d97b;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>報名表</h1>
+        <hr>
+        <form method="POST" action="request.php">
+            <input type="hidden" name="action" value="contact">
+            <div class="form-group">
+                <label for="to-fullname">姓名</label>
+                <input type="text" name="fullname" id="to-fullname" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="to-phone">電話</label>
+                <input type="text" name="phone" id="to-phone" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="to-email">信箱</label>
+                <input type="text" name="email" id="to-email" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label>性別</label>
+                <div class="custom-control custom-radio">
+                    <input type="radio" id="sex-m" name="sex" class="custom-control-input" value="M">
+                    <label class="custom-control-label" for="sex-m">男生</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input type="radio" id="sex-f" name="sex" class="custom-control-input" value="F">
+                    <label class="custom-control-label" for="sex-f">女生</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input type="radio" id="sex-x" name="sex" class="custom-control-input" value="X">
+                    <label class="custom-control-label" for="sex-x">未知</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>報名項目</label>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="items-1" name="items[]" value="S1">
+                    <label class="custom-control-label" for="items-1">網頁設計</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="items-2" name="items[]" value="S2">
+                    <label class="custom-control-label" for="items-2">資料庫管理</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="items-3" name="items[]" value="S3">
+                    <label class="custom-control-label" for="items-3">主機管理</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="items-4" name="items[]" value="S4">
+                    <label class="custom-control-label" for="items-4">平面設計</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="items-5" name="items[]" value="S5">
+                    <label class="custom-control-label" for="items-5">工業設計</label>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="month">報名月份</label>
+                <select name="month" id="month" class="form-control">
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="remark">備註說明</label>
+                <textarea name="remark" id="remark" class="form-control"></textarea>
+            </div>
+
+            <div class="form-group text-right">
+                <input type="submit" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

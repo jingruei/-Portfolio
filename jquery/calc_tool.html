@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Calc Tool</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+
+    <style>
+        #result {
+            height: 100px;
+            font-size: 3rem;
+            margin: 0;
+            border-radius: 0;
+        }
+
+        #operator {
+            width: 50px;
+        }
+
+        #number-area {
+            margin: 0;
+        }
+
+        #number-area>div {
+            border: 1px solid #f2f1f1;
+            cursor: pointer;
+        }
+
+        #number-area>div:hover {
+            background: #f45f29;
+            color: #fff;
+            font-size: 1.5rem;
+            transition: .3s;
+        }
+
+        .number-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+            background: #dedede;
+        }
+
+        @media screen and (max-width: 765px) {
+            #result {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>計算機</h2>
+        <hr>
+        <div class="alert alert-info text-right pr-3 d-flex justify-content-end align-items-center" id="result">
+            <div id="total">0</div>
+            <div id="operator"></div>
+        </div>
+
+        <div class="row" id="number-area">
+            <div class="col-3 number-button">C</div>
+            <div class="col-3 number-button">+/-</div>
+            <div class="col-3 number-button">%</div>
+            <div class="col-3 number-button">/</div>
+            <div class="col-3 number-button">7</div>
+            <div class="col-3 number-button">8</div>
+            <div class="col-3 number-button">9</div>
+            <div class="col-3 number-button">x</div>
+            <div class="col-3 number-button">4</div>
+            <div class="col-3 number-button">5</div>
+            <div class="col-3 number-button">6</div>
+            <div class="col-3 number-button">-</div>
+            <div class="col-3 number-button">1</div>
+            <div class="col-3 number-button">2</div>
+            <div class="col-3 number-button">3</div>
+            <div class="col-3 number-button">+</div>
+            <div class="col-6 number-button">0</div>
+            <div class="col-3 number-button">.</div>
+            <div class="col-3 number-button">=</div>
+        </div>
+    </div>
+</body>
+<script>
+    const calc = {
+        prevNum: '',
+        num: 0,
+        operator: '',
+        operators: ['+', '-', 'x', '%', '/'],
+        init() {
+            $('#number-area > .number-button').on('click', (e) => {
+                let value = $(e.target).html();
+                this.isOperator(value);
+                this.isNumber(value);
+            });
+        },
+        isNumber(value) {
+            if (!/^\d$/.test(value) && value != '.') {
+                return false;
+            }
+            if (value == '.' && /\./.test(this.num)) {
+                return false;
+            }
+            this.num += value;
+            this.num = this.num.replace(/^0+/, '');
+            this.total(this.num);
+        },
+        isOperator(value) {
+            if (this.operators.indexOf(value) >= 0) {
+                this.operator = value;
+                $('#operator').html(value);
+                if (!this.prevNum) {
+                    this.prevNum = this.num;
+                }
+                this.num = 0;
+            }
+
+            if (value == '+/-') {
+                let num = this.prevNum || this.num;
+                num *= -1;
+                this.total(num);
+                this.num = num;
+            }
+
+
+            if (value == 'C') {
+                this.prevNum = '';
+                this.num = 0;
+                this.total(0);
+                this.operator = '';
+                $('#operator').html('');
+            }
+
+            if (value == '=') {
+                this.calc();
+            }
+        },
+        calc() {
+            if (!this.operator) {
+                return false;
+            }
+
+            let total = 0;
+            let a = parseFloat(this.prevNum);
+            let b = parseFloat(this.num);
+
+            switch (this.operator) {
+                case '+':
+                    total = a + b;
+                    break;
+                case '-':
+                    total = a - b;
+                    break;
+                case 'x':
+                    total = a * b;
+                    break;
+                case '/':
+                    total = a / b;
+                    break;
+                case '%':
+                    total = a % b;
+                    break;
+            }
+
+            total = Math.round(total * 100) / 100; // 小數兩位
+            this.total(total);
+            this.prevNum = total;
+        },
+        total(number) {
+            $('#total').html(number);
+        }
+    }
+
+    calc.init();
+</script>
+
+</html>

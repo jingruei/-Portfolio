@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>學生清冊</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--引用jquery-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <!--引用sweetalert-->
+</head>
+
+<body>
+    <div class="container">
+        <h4>學生清冊</h4>
+        <hr>
+        <div class="alert alert-danger" id="error-msg" style="display: none;"></div>
+        <!--錯誤訊息先隱藏-->
+        <div class="row">
+            <div class="form-group col-sm-4">
+                <label for="">姓名</label>
+                <input type="text" class="form-control" id="input-name" placeholder="請輸入姓名">
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="">電話</label>
+                <input type="text" class="form-control" id="input-tel" placeholder="請輸入電話">
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="">地址</label>
+                <input type="text" class="form-control" id="input-address" placeholder="請輸入地址">
+            </div>
+        </div>
+
+        <div class="form-group text-right">
+            <button class="btn btn-primary" id="add-btn">新增</button>
+        </div>
+        <hr>
+
+        <div class="row">
+            <div class="form-group col-sm-4">
+                <h5>清冊</h5>
+                <div class="table-responsive">
+                    <table id="student-database-table"
+                        class="table table-dark table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>動作</th>
+                                <th>名稱</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-8">
+                <h5>名單</h5>
+                <div class="form-group text-right">
+                    <button class="btn btn-success" id="save-btn">儲存資料</button>
+                    <button class="btn btn-danger" id="clear-btn">清除資料</button>
+                </div>
+                <div class="form-group input-group">
+                    <input type="text" class="form-control" id="s">
+                    <div class="input-group-append">
+                        <!--按鈕放在輸入框之後-->
+                        <button class="btn btn-primary" id="search-btn">搜尋</button>
+                    </div>
+                </div>
+
+
+
+
+                <div class="table-responsive">
+                    <!--讓表單有滾輪可以左右移動不影響其他東西-->
+                    <table class="table table-dark table-striped table-bordered table-hover" id="student-table">
+                        <!--table為表格，底下有thead跟tbody，分別的底下還有tr-th或tr-td-->
+                        <thead>
+                            <tr>
+                                <th>刪除</th>
+                                <th>姓名</th>
+                                <th>電話</th>
+                                <th>地址</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal" tabindex="-1" role="dialog" id="edit-modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">修改學生資料</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="">名稱</label>
+                            <input type="text" class="form-control" id="edit-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="">電話</label>
+                            <input type="text" class="form-control" id="edit-tel">
+                        </div>
+                        <div class="form-group">
+                            <label for="">地址</label>
+                            <input type="text" class="form-control" id="edit-addresss">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="edit-save-btn">儲存</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+<script>
+    const studentStore = 'studentList_s018';
+
+    const database = {
+        get(key) {
+            let data = localStorage.getItem(key); //key為任何值 
+            return JSON.parse(data); //轉物件
+        }, //Storage只接受字串     口訣(讀物件 存字串)
+        save(key, value) {
+            value = JSON.stringify(value) //轉字串
+            localStorage.setItem(key, value);
+        }
+    }
+
+    // 錯誤訊息顯示
+    const message = {
+        id: '#error-msg',
+        show(text) {
+            $(this.id).html(text).show();
+        },
+        hide() {
+            $(this.id).hide();
+        }
+    };
+
+    // 搜尋按鈕綁定
+    const search = {
+        init() {
+            $('#search-btn').on('click', () => {
+                studentList.search();
+            });
+
+            $('#s').on('keyup', () => {
+                studentList.search();
+            });
+        }
+    };
+
+    // 學生列表清除按鈕
+    const studentListClear = {
+        init() {
+            $('#clear-btn').on('click', () => {
+                this.clear();
+            });
+        },
+        clear() {
+            Swal.fire({
+                title: '清除確認',
+                text: '確認清除資料?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '刪吧!',
+                cancelButtonText: '先不要!'
+            }).then((result) => {
+                if (result.value) {
+                    studentList.reset();
+                }
+            });
+        },
+    };
+
+    // 儲存學生列表
+    const studentListSave = {
+        init() {
+            $('#save-btn').on('click', () => {
+                studentList.save();
+            });
+        }
+    };
+
+    // 刪除學生
+    const studentDelete = {
+        classes: 'delete-btn',
+        init() {
+            $('.' + this.classes).off('click').on('click', (e) => { //.off .on 為先關事件綁定後開，確保呼叫的是173行產生的
+                let target = $(e.target);
+                let index = target.parent().parent().index(); //這邊的index為tr row
+                studentList.remove(index);
+            });
+        }
+
+    };
+    //修改學生資料
+    const studentEdit = {
+        classes: 'edit-btn',
+        init() {
+            $('.' + this.classes).off('click').on('click', (e) => {
+                let target = $(e.target);
+                let index = target.parent().parent().index();
+                studentList.edit(init);
+            });
+        }
+    };
+    //修改學生Modal
+    const editModal = {
+        id: '#edit-modal',
+        index: '',
+        load(index, student) {
+            for (let f in student) {
+                $('#edit-' + f).val(student[f]);
+            }
+            this.index = index;
+            this.show();
+        },
+        show() {
+            $(this.id).modal('show');
+        },
+        init() {
+            $('#edit-save-btn').on('click', () => {
+                console.log(this.index);
+            })
+        }
+    }
+    // 學生列表
+    const studentList = {
+        id: '#student-table tbody', //
+        db: 'studentList',
+        items: [],
+        clear() {
+            $(this.id).html(''); //body清除變空的
+        },
+        reset() {
+            this.items = []; //空陣列
+            this.clear();
+        },
+        remove(index) {
+            this.items.splice(index, 1);
+            this.load(this.items);
+            // let fe = []; //forEach
+            // this.items.forEach((value, key) => {
+            //     if (key != index) {
+            //         fe.push(value);
+            //     }
+            // });
+
+            // let map = []; //map
+            // this.items.map((value, key) => {
+            //     if (key != index) {
+            //         fe.push(value);
+            //     }
+            // });
+
+            // let fr = this.items.filter((value, key) => { //filter
+            //     return key != index;
+            // });
+
+            // console.log('fe: ');
+            // console.log(fe);
+            // console.log('map: ');
+            // console.log(map);
+            // console.log('fr: ');
+            // console.log(fr);
+
+            // console.log('items: ');
+            // console.log(this.items);
+        },
+        edit(index) {
+            let student = this.items[index];
+            editModal.load(index, student);
+        },
+        append(student) {
+            let row = '<tr>';
+            row += '<td><button class="btn btn-primary btn-sm ' + studentEdit.classes + '">修改</button></td>';
+            row += '<td><button class="ml-2 btn btn-danger btn-sm ' + studentDelete.classes + '">刪除</button></td>';
+            row += '<td>' + student['name'] + '</td>';
+            row += '<td>' + student['tel'] + '</td>';
+            row += '<td>' + student['address'] + '</td>';
+            row += '</tr>';
+            $(this.id).append(row);
+            studentDelete.init();
+            studentEdit.init();
+
+        },
+        add(student) {
+            this.append(student);
+            this.items.push(student);
+        },
+        search() {
+            let s = $('#s').val();
+            if (!s) {
+                return this.load(this.items);
+            }
+
+            let reg = new RegExp('.*' + s + '.*', 'g');  //g為全域globe
+            let result = this.items.filter(item => {
+                return reg.test(item.name) || reg.test(item.tel) || reg.test(item.address);
+            })
+            this.load(result);
+        },
+        load(items) {
+            this.clear();
+
+            items = JSON.parse(JSON.stringify(items)); //先轉字串再轉物件
+
+            items.map(student => {
+                this.append(student);
+            });
+        },
+        save() {
+            Swal.fire({
+                title: '儲存名稱',
+                input: 'text',
+            }).then(result => {
+                let value = result.value;
+                if (!value) {
+                    return false;
+                }
+                let db = database.get(studentStore);
+                if (!db) {
+                    db = {}; //物件
+                }
+
+                db[value] = this.items;
+                database.save(studentStore, db);
+                Swal.fire({
+                    title: '儲存完成',
+                    icon: 'success'
+                });
+                 studentListDatabase.init();
+            });
+           
+        },
+        init() {
+            let db = database.get(studentStore); //取key值
+            if (db) {
+                let hadData = false;
+                for (let d in db) {
+                    if (!hasData) {
+                        this.items = db[d];
+                        hasData = true;
+                    }
+                }
+            }
+            this.load(this.items);
+        }
+    };
+    const studentListDatabase = {
+        id: 'student-database-table tbody',
+        delClass: 'delete-database-btn',
+        loadClass: 'load-database-btn',
+        items: {},
+        init() {
+            this.render();
+            this.bind();
+        },
+        render() {
+            let db = database.get(studentStore) || {};
+            let tbody = '';
+            for (let name in db) {
+                tbody += '<tr>';
+                tbody += '<td>';
+                tbody += '<button class="btn btn-primary btn-sm ' + this.loadClass + '" data-name="' + name +
+                    '">載入</button>';
+                tbody += '<button class="btn btn-danger btn-sm ml-2 ' + this.delClass + '" data-name="' + name +
+                    '">刪除</button>';
+                tbody += '</td>';
+                tbody += '<td>' + name + '</td>';
+                tbody += '</tr>';
+            }
+            $('#' + this.id).html(tbody);
+            this.items = db;
+        },
+        bind() {
+            $('.' + this.delClass).off('click').on('click', (e) => {
+                let target = $(e.target);
+                let name = target.data('name');
+                // this.db[name] && delete this.db[name];
+                if (this.items[name]) {
+                    delete this.items[name];
+                }
+                database.save(studentStore, this.items); //   
+                this.init();
+            });
+
+            $('.' + this.loadClass).off('click').on('click', (e) => {
+                let target = $(e.target);
+                let name = target.data('name');
+                if (this.items[name]) {
+                    studentList.load(this.items[name]);
+                }
+            });
+        }
+    } 
+    // 學生
+    const student = {
+        fields: {
+            name: '姓名',
+            tel: '電話',
+            address: '地址',
+        },
+        reset() { //重置
+            for (let id in this.fields) {
+                $('#input-' + id).val(''); //輸入空內容清空
+            }
+        },
+        add() {
+            message.hide();
+            let student = {}; //物件
+
+            for (let id in this.fields) {
+                s
+                let tmp = $('#input-' + id);
+                if (!tmp.val()) {
+                    message.show(this.fields[id] + '未輸入');
+                    tmp.focus();
+                    return false;
+                }
+                student[id] = tmp.val();
+            }
+            studentList.add(student);
+            this.reset();
+        },
+        init() {
+            $('#add-btn').on('click', () => {
+                this.add();
+            });
+        }
+    };
+
+    student.init();
+    search.init();
+    studentListClear.init();
+    studentListSave.init();
+
+
+
+
+
+    // const student = { //宣告物件
+    //     items: [], //空陣列
+    //     fields: {
+    //         name: '姓名', //給物件來減少編輯數量
+    //         tel: '電話',
+    //         address: '地址',
+    //     },
+    //     message(text) {
+    //         msg = $('#error-msg').html(text).show(); //綁定錯誤訊息並顯示內容
+    //     },
+    //     hideMessage() {
+    //         $('#error-msg').hide(); //綁定錯誤訊息然後先隱藏
+    //     },
+    //     append(student) {
+    //         let row = '<tr>'; //透過變數來組裝tbody
+    //         row += '<td>' + student['name'] + '</td>';
+    //         row += '<td>' + student['tel'] + '</td>';
+    //         row += '<td>' + student['address'] + '</td>';
+    //         row += '</tr>'
+    //         $('#student-table tbody').append(row); //綁定table底下的tbody之後附加 列(row)
+    //     },
+    //     search() {
+    //         let s = $('#s').val(); //s=輸入的值
+    //         if (!s) { //s沒有輸入東西時
+    //             return this.load(this.items); //回傳load方法
+    //         }
+
+    //         let reg = new RegExp('.*' + s + '.*', 'g'); //正規表示法  .
+    //         let result = this.items.filter(item => { //filter(過濾)  回傳布林值
+    //             return reg.test(item.name) || reg.test(item.tel) || reg.test(item.address);
+    //             //test-測試有沒有符合標準正規法
+    //         });
+    //         this.load(result); //重新組合tbody
+    //     },
+    //     load(items) {
+    //         let tbody = '';
+    //         items.map(item => { //把陣列內的值一筆一筆取出來
+    //             tbody += '<tr>';
+    //             tbody += '<td>' + item['name'] + '</td>';
+    //             tbody += '<td>' + item['tel'] + '</td>';
+    //             tbody += '<td>' + item['address'] + '</td>';
+    //             tbody += '</tr>';
+    //         });
+    //         $('#student-table tbody').html(tbody); //val跟html皆為抓取內容
+    //         //val針對input所輸入的內容  html為其他內容
+    //     },
+    //     init() { //初始化   功能要執行都放這
+    //         $('#add-btn').on('click', () => {
+    //             this.hideMessage();
+    //             let student = {}; //宣告物件
+
+    //             for (let id in this.fields) { //對物件做迴圈
+    //                 let tmp = $('#input-' + id);
+    //                 if (!tmp.val()) {
+    //                     this.message(this.fields[id] + '未輸入'); //show()為顯示
+    //                     tmp.focus(); //focus為聚焦在某個點，未輸入時給輸入框聚焦
+    //                     return false;
+    //                 }
+    //                 student[id] = tmp.val(); //把東西丟到陣列裡面
+    //             }
+    //             this.append(student); //呼叫append()
+    //             this.items.push(student); //push()把括號內的東西丟到陣列裡面，任何東西都可以不限型態
+    //         });
+    //         $('#clear-btn').on('click', () => { //清除按鈕事件綁定
+    //             Swal.fire({
+    //                 title: '清除確認',
+    //                 text: '確認清除資料?',
+    //                 icon: 'warning', //小圖示
+    //                 showCancelButton: true,
+    //                 confirmButtonColor: '#3085d6', //確認的按紐顏色
+    //                 cancelButtonColor: '#d33', //取消的按鈕顏色
+    //                 confirmButtonText: '刪吧!',
+    //                 cancelButtonText: '先不要!'
+    //             }).then((result) => { //確認之後的結果  如按取消不會執行
+    //                 if (result.value) {
+    //                     $('#student-table tbody').html(''); //清除tbody=給空字串
+    //                 }
+    //             });
+    //         });
+    //         $('#search-btn').on('click', () => { //搜尋事件綁定
+    //             this.search(); //呼叫search()
+    //         });
+    //         $('#s').on('keyup', () => { //keyup按下去放開後
+    //             this.search();
+    //         });
+    //     }
+    // };
+
+    // student.init();
+
+    // $('#save-btn').on('click', () => {
+    //     localStorage.setItem('students', JSON.stringify(
+    //     students)); //localStorage只接受字串 ，JSON.stringify為型態轉換(物件>字串)
+    // });
+    // //JSON.parse(string) ：接受一个 JSON 字串並將其轉換成一個 JavaScript 對象。(字串>物件)
+    // //JSON.stringify(obj) ：接受一个 JavaScript 對象並將其轉換為一個 JSON 字串。(物件>字串)
+</script>
+
+</html>

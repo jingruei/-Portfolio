@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        h1,h2{
+            text-align: center;
+            color: aqua;
+        }
+    
+        .content{
+            margin: 10px auto;
+            width: 50vw;
+        }
+    
+        .content .tab{
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            color: white;
+            margin-bottom: 1px;
+        }
+        
+        .content .tab input{
+            position: relative;
+            z-index: -1;
+            display: none;
+        }
+    
+        .content .tab input:checked ~ .tab-content{
+            max-height: 100vh;
+            padding: 10px;
+        }
+    
+        .content .tab input:checked ~ label:after{
+            content: "-";
+        }
+    
+        .content .tab label{
+            position: relative;
+            display: block;
+            font-size: 2rem;
+            cursor: pointer;
+            padding-left: 10px;
+            background: #26A69A;
+        }
+
+        .content .tab label:hover{
+            background: #5c6BC0;
+        }
+
+        .content .tab label:after{
+            position: absolute;
+            content: "+";
+            top: 0;
+            right: 20px;
+        }
+
+        .content .tab .tab-content{
+            width: 100%;
+            overflow: hidden;
+            max-height: 0;
+            overflow: hidden;
+            background: #4db6ac;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <h1>CSS Accordian</h1>
+
+    <h2>For Multi</h2>
+
+    <div class="content">
+        <div class="tab">
+            <input type="checkbox" id="tab-one">
+            <label for="tab-one">one</label>
+            <div class="tab-content">
+                Hello one
+            </div>
+        </div>
+
+        <div class="tab">
+            <input type="checkbox" id="tab-two">
+            <label for="tab-two">two</label>
+            <div class="tab-content">
+                Hello two
+            </div>
+        </div>
+
+        <div class="tab">
+            <input type="checkbox" id="tab-three">
+            <label for="tab-three">three</label>
+            <div class="tab-content">
+                Hello three
+            </div>
+        </div>
+    </div>
+
+    <h2>For one</h2>
+    
+    <div class="content">
+        <div class="tab">
+            <input type="radio" id="tab-one-r" name="1">
+            <label for="tab-one-r">one</label>
+            <div class="tab-content">
+                Hello one
+            </div>
+        </div>
+
+        <div class="tab">
+            <input type="radio" id="tab-two-r" name="1">
+            <label for="tab-two-r">two</label>
+            <div class="tab-content">
+                Hello two
+            </div>
+        </div>
+
+        <div class="tab">
+            <input type="radio" id="tab-three-r" name="1">
+            <label for="tab-three-r">three</label>
+            <div class="tab-content">
+                Hello three
+            </div>
+        </div>
+    </div>
+</body>
+</html>

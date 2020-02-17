@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Score Calculate</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/score_calc.css">
+   
+</head>
+<body>
+    <div class="container mt-2">
+        <div class="alert alert-info">
+            <h2>Score Calculate</h2>
+        </div>
+        <div class="container">
+            <div class="form-group">
+                <label for="Score">輸入分數</label>
+                <input type="number" class="form-control" id="score" onkeyup="calc(event)">
+            </div>
+            <div class="form-group text-right">
+                <button class="btn btn-primary" onclick="calc()">計算</button>
+            </div>
+            <div class="alert alert-danger" id="err-msg">輸入錯誤</div>
+            <div class="alert alert-success" id="result"></div>
+        </div>
+    </div>
+</body>
+<script src="js/score_calc.js"></script>
+</html>

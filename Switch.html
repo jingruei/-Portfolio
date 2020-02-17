@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Switch</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="alert alert-info">Switch練習</div>
+    </div>
+    <div class="container">
+        <h4>給評等顯示分數級距</h4>
+        <ul>
+            <li>甲: >=90</li>
+            <li>乙: >= 80 && < 90</li>
+            <li>丙: >= 70 && < 80</li>
+            <li>丁: >=60 && < 70 </li>
+            <li>不及格: < 60 </li>
+        </ul>
+
+    
+        <div class="form-group">
+            <select class="form-control" id="scope">
+                <option>甲</option>
+                <option>乙</option>
+                <option>丙</option>
+                <option>丁</option>
+                <option>不及格</option>
+            </select>
+        </div>
+        <div class="form-group text-right">
+            <button class="btn btn-primary" onclick="caculator()">計算</button>
+        </div>
+    </div>
+</body>
+
+<script>
+    function caculator() {
+        var scope = document.querySelector('#scope')
+
+        switch (scope.value) {
+            case '甲':
+                console.log(scope.value + ': >= 90');
+                break;
+
+            case '乙':
+                console.log(scope.value + ': >= 80 && <90');
+                break;
+
+            case '丙':
+                console.log(scope.value + ': >= 70 && <80');
+                break;
+
+            case '丁':
+                console.log(scope.value + ': >= 60');
+                break;
+
+            default:
+                console.log(scope.value + ': < 60');
+                break;
+
+        }
+
+    }
+</script>
+
+</html>

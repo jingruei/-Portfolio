@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DOM Selector</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-2">
+        <div class="alert alert-info">QuerySelectorAll練習</div>
+    </div>
+    <div class="container">
+        <ul>
+            <li class="items">01</li>
+            <li class="items">02</li>
+            <li class="items">03</li>
+            <li class="items">04</li>
+            <li class="items">05</li>
+            <li class="items">06</li>
+            <li class="items">07</li>
+            <li class="items">08</li>
+            <li class="items">09</li>
+            <li class="items">10</li>
+        </ul>
+
+        <button class="btn btn-primary" onclick="get()">觸發</button>
+    </div>
+    
+</body>
+
+<script>
+    function get() {
+        var items = document.querySelectorAll('.items');
+
+        var len = items.length;
+
+        for(var i = 0; i < len; i++) {
+            console.log('Index ' + i + ':' +items[i].innerHTML);
+        }
+    }
+
+
+</script>
+</html>

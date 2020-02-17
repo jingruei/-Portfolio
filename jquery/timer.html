@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Timer - setTimer</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="alert alert-info">Timer - setTimer</div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="output">
+        </div>
+        <button class="btn btn-primary" id="timer">timer</button>
+    </div>
+</body>
+<script>
+    let pid = '';
+    $('#timer').on('click', () => {
+        console.log('S : ' + pid);
+        clearTimeout(pid);
+
+        pid = setTimeout(() => {
+            $('#output').val('Timer!');
+        }, 2000);     //2000為毫秒  等於2秒
+
+        $('#output').val('Start');
+        console.log('E :' + pid);
+    });
+</script>
+
+</html>

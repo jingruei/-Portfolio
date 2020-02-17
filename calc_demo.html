@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>子女身高計算機</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <style>
+        body {
+            background: #dedede;
+        }
+        #wrap {
+            background: #ffffff;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="wrap">
+        <div class="alert alert-info">
+            <h3>子女身高計算機</h3>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <div>
+                    <label for="">爸爸身高 </label>
+                    <input type="number" id="father" min="0" max="300" class="form-control" placeholder="請輸入爸爸身高">
+                </div>
+            </div>
+            <div class="form-group col-sm-6">
+                <div>
+                    <label for="">媽媽身高</label>
+                    <input type="number" id="mother" min="0" max="300" class="form-control" placeholder="請輸入媽媽身高">
+                </div>
+            </div>
+        </div>
+
+        <div class="text-right">
+            <button id="calc-btn" class="btn btn-primary">計算</button>
+        </div>
+
+        <h5>男孩身高</h5>
+        <hr>
+        <div class="row">
+            <div class="from-group col-6">
+                <img src="123.jpeg" alt="" class="img-fluid" style="max-width: 300px;">
+            </div>
+            <div class="form-group col-6">
+                <div class="form-group alert alert-danger">
+                    <h6>最低</h6>
+                    <hr>
+                    <span id="boy-Min">0</span>
+                </div>
+                <div class="form-group alert alert-primary">
+                    <h6>平均</h6>
+                    <hr>
+                    <span id="boy-Avg">0</span>
+                </div>
+                <div class="form-group alert alert-warning">
+                    <h6>最高</h6>
+                    <hr>
+                    <span id="boy-Max">0</span>
+                </div>
+            </div>
+        </div>
+
+        <h5>女孩身高</h5>
+        <hr>
+        <div class="row">
+                <div class="from-group col-6">
+                    <img src="456.jpg" alt="" class="img-fluid" style="max-width: 300px;">
+                </div>
+                <div class="form-group col-6">
+                    <div class="form-group alert alert-danger">
+                        <h6>最低</h6>
+                        <hr>
+                        <span id="girl-Min">0</span>
+                    </div>
+                    <div class="form-group alert alert-primary">
+                        <h6>平均</h6>
+                        <hr>
+                        <span id="girl-Avg">0</span>
+                    </div>
+                    <div class="form-group alert alert-warning">
+                        <h6>最高</h6>
+                        <hr>
+                        <span id="girl-Max">0</span>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+
+</body>
+<script>
+    const diff = 12;
+    const range = 7.5;
+
+    let calcBtn = document.querySelector('#calc-btn') //抓按鈕資料
+    calcBtn.addEventListener('click', () => {
+        return calc(); //觸發函式事件!
+    });
+
+
+    // let calc2 = () => {
+    //     let father = document.querySelector('#father')
+    //     let mother = document.querySelector('#mother')
+
+    //     let fatherValue = father.value || 0;
+    //     let motherValue = mother.value || 0;
+
+    //     let mapping = {
+
+
+
+    //     }
+    // };
+
+    // for (let id in mapping) {
+    //     let dom = document.querySelector('#' + id);
+    //     dom.innerHTML = window[mapping[id]](fatherValue, motherValue);
+    // }
+
+
+    let calc = () => {
+        let father = document.querySelector('#father')
+        let mother = document.querySelector('#mother')
+
+        let fatherValue = father.value || 0;
+        let motherValue = mother.value || 0;
+
+        let boyAvg = getBoyAvg(fatherValue, motherValue);
+        let girlAvg = getGirlAvg(fatherValue, motherValue);
+        let boyMin = getBoyMin(fatherValue, motherValue);
+        let boyMax = getBoyMax(fatherValue, motherValue); // 計算數值
+        let girlMin = getGirlMin(fatherValue, motherValue);
+        let girlMax = getGirlMax(fatherValue, motherValue);
+
+        console.log(boyMin, boyAvg, boyMax, girlMin, girlAvg, girlMax); // 印數值
+
+        let boyMinDom = document.querySelector('#boy-Min');
+        let boyAvgDom = document.querySelector('#boy-Avg');
+        let boyMaxDom = document.querySelector('#boy-Max'); //抓空間資料
+        let girlMinDom = document.querySelector('#girl-Min');
+        let girlAvgDom = document.querySelector('#girl-Avg');
+        let girlMaxDom = document.querySelector('#girl-Max');
+
+        boyMinDom.innerHTML = boyMin;
+        boyAvgDom.innerHTML = boyAvg;
+        boyMaxDom.innerHTML = boyMax;
+        girlMinDom.innerHTML = girlMin; //給資料
+        girlAvgDom.innerHTML = girlAvg;
+        girlMaxDom.innerHTML = girlMax;
+
+    }
+
+    var getBoyAvg = (father, mother) => {
+        father = parseInt(father);
+        mother = parseInt(mother); //轉型1
+        //father = +father;
+        //mother = +mother;   轉型2
+        let avg = (father + mother + diff) / 2; //轉型3直接在名字前面+
+        return avg;
+    }
+    var getGirlAvg = (father, mother) => {
+        father = parseInt(father);
+        mother = parseInt(mother);
+        let avg = (father + mother - diff) / 2;
+        return avg;
+    }
+    var getBoyMin = (father, mother) => {
+        father = parseInt(father);
+        mother = parseInt(mother);
+        let min = getBoyAvg(father, mother) - range;
+        return min;
+    }
+    var getBoyMax = (father, mother) => {
+        father = parseInt(father);
+        mother = parseInt(mother);
+        let max = getBoyAvg(father, mother) + range;
+        return max;
+    }
+    var getGirlMin = (father, mother) => {
+        father = parseInt(father);
+        mother = parseInt(mother);
+        let min = getGirlAvg(father, mother) - range;
+        return min;
+    }
+    var getGirlMax = (father, mother) => {
+        father = parseInt(father);
+        mother = parseInt(mother);
+        let max = getGirlAvg(father, mother) + range;
+        return max;
+    }
+</script>
+
+</html>
